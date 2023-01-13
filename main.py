@@ -8,9 +8,6 @@ def f(h):
 def df(h):
   return ( (2 - 2*h**2) / (np.sqrt(1-h**2)))
 
-def fx(x):
-  return x**3 - 9*x + 3
-
 def qx(h):
   return (np.sin(-1.24 + 0.5*np.pi - h*np.sqrt(1-h**2)))
 
@@ -22,7 +19,7 @@ def bissecao(f, a, b, tol):
       p = (a + b) / 2 
       fp = f(p)
     if ((abs(fp) < tol) or (b - a < tol)):  
-      return (p, i, fp, a, b, b-a)
+      return (p, i, fp, abs(b-a), a, b)
     
     i = i+1
     if f(a) * fp < 0:
@@ -41,7 +38,7 @@ def falsa_posicao(f, a, b, tol):
       fp = f(p)
 
     if ((abs(fp) < tol) or (b - a < tol)):  
-      return (p, i, fp, (b-a))
+      return (p, i, fp, abs(b-a))
     
     i = i+1
     if fa * fp < 0:
@@ -57,8 +54,8 @@ def ponto_fixo(f, qx, x0, tol, n):
   while i <= n:
     x1 = qx(x0)
     fx1 = f(x1)
-    if ((abs(fx1) < tol)  or (abs(x1 - x0) < tol)):  
-      return (x1, i, fx1, (x1 - x0))
+    if ((abs(fx1) < tol) or (abs(x1 - x0) < tol)):  
+      return (x1, i, fx1, abs(x1 - x0))
 
     x0 = x1
     i = i+1
@@ -74,8 +71,8 @@ def newton(f, df, x0, tol):
     x1 = (x0 - (fx0/dfx0))
     fx1 = f(x1)
     
-    if ((abs(fx1) < tol)):  
-      return (x1, i, fx1, (x1-x0)/2)
+    if ((abs(fx1) < tol) or (abs(x1 - x0) < tol)):  
+      return (x1, i, fx1, abs(x1-x0))
     
     x0 = x1
     i = i + 1
@@ -98,6 +95,7 @@ def secante(f, x1, x0, tol):
     x0 = x1
     x1 = qx
 
+print('(x, numero de iterações, f(x), Erro em x)')
 print('bissecao', bissecao(f, 0, 1, 1e-2))
 print('falsa posicao', falsa_posicao(f, 0, 1, 1e-2))
 print('ponto fixo', ponto_fixo(f, qx, 0.171875, 1e-2, 300))
